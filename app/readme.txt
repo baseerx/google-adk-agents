@@ -1,5 +1,5 @@
 adk --help
-adk run web
+adk web
 adk run app
 
 from google-adk-agents import Agent
