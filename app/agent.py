@@ -12,6 +12,15 @@ basic_agent = Agent(
 )
 
 
+#1.Creating basic agent with built-in tools
+google_search_agent=Agent(
+    model='gemini-2.0-flash-001',
+    name='google_search_agent',
+    description='A helpful assistant for user questions with Google Search.',
+    instruction='Answer user questions to the best of your knowledge using Google Search.',
+    tools=[google_search]
+)
+
 #2.Creating tool agent
 #multi line comments inside tool function allows agent to understand the purpose of the tool
 def get_stock_price(ticker: str) -> dict:
@@ -29,6 +38,7 @@ def name_of_agent() -> str:
     return "This agent is named 'Baseer'."
 
 instruction=""
+
 try:
     instruction = open('instructions.txt', 'r').read()
 except FileNotFoundError:
@@ -42,4 +52,7 @@ tool_agent = Agent(
     tools=[get_stock_price, name_of_agent]
 )
 
-root_agent = tool_agent
+print(instruction)
+
+# Assigning the tool agent to the root agent, root_agent decides which agent to use
+root_agent = google_search_agent
