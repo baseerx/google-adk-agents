@@ -1,9 +1,12 @@
-from google.adk.agents import Agent
+from google.adk.agents import Agent, LlmAgent, BaseAgent
 import yfinance as yf
 from google.adk.tools import google_search
 
+
 # This code creates a basic agent and a tool agent using the Google ADK library.
-#agent name and project name should be same
+# agent name and project name should be same
+
+
 basic_agent = Agent(
     model='gemini-2.0-flash-001',
     name='root_agent',
@@ -12,8 +15,8 @@ basic_agent = Agent(
 )
 
 
-#1.Creating basic agent with built-in tools
-google_search_agent=Agent(
+# 1.Creating basic agent with built-in tools
+google_search_agent = Agent(
     model='gemini-2.0-flash-001',
     name='google_search_agent',
     description='A helpful assistant for user questions with Google Search.',
@@ -21,8 +24,10 @@ google_search_agent=Agent(
     tools=[google_search]
 )
 
-#2.Creating tool agent
-#multi line comments inside tool function allows agent to understand the purpose of the tool
+# 2.Creating tool agent
+# multi line comments inside tool function allows agent to understand the purpose of the tool
+
+
 def get_stock_price(ticker: str) -> dict:
     """
     Get the current stock price for a given ticker symbol. this is tool and will be used by the agent to fetch stock prices.
@@ -31,18 +36,21 @@ def get_stock_price(ticker: str) -> dict:
     price = stock.info.get('currentPrice', "Price not available")
     return {"price": price, "ticker": ticker}
 
+
 def name_of_agent() -> str:
     """
     This is a tool function that returns the name of the agent.
     """
     return "This agent is named 'Baseer'."
 
-instruction=""
+
+instruction = ""
 
 try:
     instruction = open('instructions.txt', 'r').read()
 except FileNotFoundError:
     instruction = "Use this agent to get stock prices for a given ticker symbol."
+
 
 tool_agent = Agent(
     model='gemini-2.0-flash-001',
@@ -52,9 +60,34 @@ tool_agent = Agent(
     tools=[get_stock_price, name_of_agent]
 )
 
+
+# Base agent and Child agent can be used to create sub-agents
+
+child_agent = LlmAgent(
+    model='gemini-2.0-flash',
+    name='child_agent',
+    description='A child agent that can perform tasks.',
+    
+)
+
+
+
+base_agent = BaseAgent(
+    name='base_agent',
+)
+
+
+coordinator_agent = LlmAgent(
+    model='gemini-2.0-flash-001',
+    name='coordinator_agent',
+    description='A coordinator agent that manages queries.',
+    sub_agents=[child_agent, base_agent],
+    
+)
+
 print(instruction)
 
 # Assigning the tool agent to the root agent, root_agent decides which agent to use
 # We can use states for accessing one agent events in another agent
 
-root_agent = google_search_agent
+root_agent = coordinator_agent
