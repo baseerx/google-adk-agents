@@ -1,6 +1,9 @@
 from google.adk.agents import Agent
 import yfinance as yf
+from google.adk.tools import google_search
 
+# This code creates a basic agent and a tool agent using the Google ADK library.
+#agent name and project name should be same
 basic_agent = Agent(
     model='gemini-2.0-flash-001',
     name='root_agent',
@@ -10,8 +13,8 @@ basic_agent = Agent(
 
 
 #2.Creating tool agent
-
-def get_stock_price(ticker: str) -> float:
+#multi line comments inside tool function allows agent to understand the purpose of the tool
+def get_stock_price(ticker: str) -> dict:
     """
     Get the current stock price for a given ticker symbol. this is tool and will be used by the agent to fetch stock prices.
     """
@@ -19,12 +22,24 @@ def get_stock_price(ticker: str) -> float:
     price = stock.info.get('currentPrice', "Price not available")
     return {"price": price, "ticker": ticker}
 
+def name_of_agent() -> str:
+    """
+    This is a tool function that returns the name of the agent.
+    """
+    return "This agent is named 'Baseer'."
+
+instruction=""
+try:
+    instruction = open('instructions.txt', 'r').read()
+except FileNotFoundError:
+    instruction = "Use this agent to get stock prices for a given ticker symbol."
+
 tool_agent = Agent(
     model='gemini-2.0-flash-001',
     name='tool_agent',
     description='A tool agent for fetching stock prices.',
-    instruction='Use this agent to get stock prices for a given ticker symbol.',
-    tools=[get_stock_price]
+    instruction=instruction,
+    tools=[get_stock_price, name_of_agent]
 )
 
 root_agent = tool_agent

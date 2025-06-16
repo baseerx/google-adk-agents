@@ -17,6 +17,14 @@ Functions Tools
 
 ---Open Router--
 Open router provides multiple free & paid LLM models to be used via LiteLLM API. It allows users to access and utilize different language models for various applications, such as natural language processing, text generation, and more.
+
+provide openrouter multiple models url link - list of models to be used
+
+https://docs.openrouter.ai/docs/providers/openrouter
+
+
+---
+
 ---Google ADK Agents---
 Google ADK Agents are AI agents that can be used to automate tasks, provide information, and assist users in various applications. They can be integrated into different platforms and can perform a wide range of functions, such as answering questions, providing recommendations, and executing commands.
 ---Google ADK Web---
