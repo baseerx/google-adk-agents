@@ -55,4 +55,6 @@ tool_agent = Agent(
 print(instruction)
 
 # Assigning the tool agent to the root agent, root_agent decides which agent to use
+# We can use states for accessing one agent events in another agent
+
 root_agent = google_search_agent
